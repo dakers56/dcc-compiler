@@ -19,7 +19,9 @@ trait Lexer {
  *
  * @param s String representation of this token in source code
  */
-case class Token(s: String)
+case class Token(s: String){
+  override def toString: String = "\"" + s + "\""
+}
 
 /**
  * Regex that a token must conform to. Private constructor to ensure that the [[Regex]] is correctly constructed using
@@ -34,11 +36,11 @@ class TokenRegex private(val re: Regex)
  */
 object TokenRegex {
   /**
-   * @param l list of string regexes
+   * @param tokList list of string regexes
    * @return [[TokenRegex]] comprised of the elements of l turned into capturing groups, and OR'd together
    */
-  def apply(l: List[String]): TokenRegex = {
-    new TokenRegex(("^(" + (l.head + l.tail.foldLeft("| " + _)) + ")*$").r)
+  def apply(tokList: List[String]): TokenRegex = {
+    new TokenRegex(("(" + tokList.tail.foldLeft(tokList.head)((l, r) => l + "|" + r)  + "){1}").r)
   }
 }
 
