@@ -1,4 +1,6 @@
-import com.dakers.compiler.{Token, TokenRegex, TokenRegexLexer}
+package com.dakers.lexer
+
+import com.dakers.compiler.lexer.{Token, TokenRegex, TokenRegexLexer}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{a, be}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper

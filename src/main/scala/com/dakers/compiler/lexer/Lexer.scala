@@ -1,4 +1,4 @@
-package com.dakers.compiler
+package com.dakers.compiler.lexer
 
 import scala.util.matching.Regex
 
