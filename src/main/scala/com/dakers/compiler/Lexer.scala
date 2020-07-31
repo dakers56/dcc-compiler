@@ -19,7 +19,7 @@ trait Lexer {
  *
  * @param s String representation of this token in source code
  */
-case class Token(s: String){
+case class Token(s: String) {
   override def toString: String = "\"" + s + "\""
 }
 
@@ -40,8 +40,30 @@ object TokenRegex {
    * @return [[TokenRegex]] comprised of the elements of l turned into capturing groups, and OR'd together
    */
   def apply(tokList: List[String]): TokenRegex = {
-    new TokenRegex(("(" + tokList.tail.foldLeft(tokList.head)((l, r) => l + "|" + r)  + "){1}").r)
+    invalidTokens(tokList) match {
+      case Some(inv) => throw new RuntimeException("Invalid token strings provided: " + inv)
+      case _ => new TokenRegex(("(" + tokList.tail.foldLeft(tokList.head)((l, r) => l + "|" + r) + "){1}").r)
+    }
   }
+
+  /**
+   * @param tokList list of strings whose elements represent a regex for a token
+   * @return [[None]] if all tokens are valid, otherwise [[Some]] containing a string of all invalid tokens
+   */
+  def invalidTokens(tokList: List[String]): Option[String] = {
+    val l = tokList.filterNot(isValidTokenString)
+    l match {
+      case Nil => None
+      case _ => Some(l.mkString(","))
+    }
+  }
+
+  /**
+   * @param s string to validate
+   * @return true if the string represents a valid token, false otherwise
+   */
+  def isValidTokenString(s: String) = !Option(s).forall(_.isBlank)
+
 }
 
 /**
